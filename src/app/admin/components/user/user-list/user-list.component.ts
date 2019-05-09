@@ -44,7 +44,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
         const sort = event.sorts[0];
 
-        this.pagination.sortBy =  sort.prop === 'fullName' ? 'lastName' : sort.prop;
+        this.pagination.sortBy =  sort.prop;
         this.pagination.sortDirection = sort.dir;
         this.pagination.currentPage = 1;
         this.pagination.pageSize = 10;
@@ -54,7 +54,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     initializePagination(): void {
 
-        this.pagination.sortBy = 'lastName';
+        this.pagination.sortBy = 'userName';
         this.pagination.sortDirection = 'asc';
         this.pagination.currentPage = 1;
         this.pagination.pageSize = 10;
@@ -64,9 +64,9 @@ export class UserListComponent implements OnInit, OnDestroy {
     setUpColumns(): void {
 
         this.columns = [
-            { prop: 'dni', name: 'DNI' },
-            { prop: 'fullName', name: 'Full Name' },
-            { prop: 'active', name: 'Active' },
+            { prop: 'userName', name: 'User Name' },
+            { prop: 'email', name: 'Email' },
+            { prop: 'disabled', name: 'Disabled' },
             { prop: '', name: '', cellTemplate: this.editTmplRow }];
     }
 

@@ -5,5 +5,6 @@ export class User extends BaseEntity {
     name: string;
     userName: string;
     roleId: number;
+    roleName: string;
     password: string;
 }

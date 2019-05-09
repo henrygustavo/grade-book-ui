@@ -14,6 +14,7 @@ import { RoleService } from './services/role.service';
 import { CourseService } from './services/course.service';
 import { CourseListComponent } from './components/course/course-list/course-list.component';
 import { CourseEditComponent } from './components/course/course-edit/course-edit.component';
+import { UserListComponent } from './components/user/user-list/user-list.component';
 
 
 @NgModule({
@@ -23,7 +24,7 @@ import { CourseEditComponent } from './components/course/course-edit/course-edit
     ReactiveFormsModule,
     adminRoutes
   ],
-  declarations: [DashBoardComponent, CourseListComponent, CourseEditComponent],
+  declarations: [DashBoardComponent, CourseListComponent, CourseEditComponent,UserListComponent],
   providers: [AdminGuard,CourseService, RoleService, UserService, GradeBookService]
 
 })
