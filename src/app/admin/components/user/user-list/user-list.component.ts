@@ -65,6 +65,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
         this.columns = [
             { prop: 'userName', name: 'User Name' },
+            { prop: 'roleName', name: 'Role Name', sortable: false },
             { prop: 'email', name: 'Email' },
             { prop: 'disabled', name: 'Disabled' },
             { prop: '', name: '', cellTemplate: this.editTmplRow }];

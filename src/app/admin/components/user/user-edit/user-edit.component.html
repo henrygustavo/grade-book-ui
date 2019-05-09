@@ -1,0 +1,81 @@
+<div id="page-wrapper" *ngIf="mainForm">
+    <div class="row">
+        <div class="col-lg-12">
+            <h1 class="page-header">User</h1>
+        </div>
+        <!-- /.col-lg-12 -->
+    </div>
+    <!-- /.row -->
+    <form novalidate (ngSubmit)="save()" [formGroup]="mainForm">
+        <div class="row">
+            <div class="col-md-6 well col-lg-offset-3">
+                <div class="form-group">
+                    <div [ngClass]="{'has-error': displayMessage.userName }">
+                        <input class="form-control" placeholder="User Name" formControlName="userName" />
+                        <span class="help-block" *ngIf="displayMessage.userName">
+                            {{displayMessage.userName}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div [ngClass]="{'has-error': displayMessage.roleId }">
+                        
+                        <select class="form-control" formControlName="roleId">
+                            <option value="">--Select Role--</option>
+                            <option *ngFor="let role of roles" value="{{role.id}}">
+                                {{role.name}}
+                            </option>
+                        </select>
+
+                        <span class="help-block" *ngIf="displayMessage.roleId">
+                            {{displayMessage.roleId}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div [ngClass]="{'has-error': displayMessage.email }">
+                        <input class="form-control" type="email" placeholder="Email" formControlName="email" />
+                        <span class="help-block" *ngIf="displayMessage.email">
+                            {{displayMessage.email}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div [ngClass]="{'has-error': displayMessage.password }">
+                        <input class="form-control" type="password" placeholder="Password" formControlName="password" />
+                        <span class="help-block" *ngIf="displayMessage.password">
+                            {{displayMessage.password}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div [ngClass]="{'has-error': displayMessage.confirmPassword }">
+                        <input class="form-control" type="password" placeholder="Confirm Password" formControlName="confirmPassword" />
+                        <span class="help-block" *ngIf="displayMessage.confirmPassword">
+                            {{displayMessage.confirmPassword}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" name="disabled" formControlName="disabled">Disabled</label>
+                    </div>
+                  </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-6 well col-lg-offset-3">
+                <div class="form-group">
+                    <div class="col-md-3">
+                        <a [routerLink]="['/users']" class="btn btn-default btn-block">Back</a>
+                    </div>
+                    <div class="col-md-9">
+                        <button type="submit" class="btn btn-primary btn-block" [disabled]="!mainForm.valid">Save</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<!-- /#page-wrapper -->

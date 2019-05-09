@@ -7,6 +7,7 @@ import {NgxPermissionsGuard} from 'ngx-permissions';
 import { CourseListComponent } from './components/course/course-list/course-list.component';
 import { CourseEditComponent } from './components/course/course-edit/course-edit.component';
 import { UserListComponent } from './components/user/user-list/user-list.component';
+import { UserEditComponent } from './components/user/user-edit/user-edit.component';
 
 const routes: Route[] = [
     {
@@ -16,16 +17,22 @@ const routes: Route[] = [
         data: { permissions: { only: ['ADMIN', 'TEACHER', 'STUDENT']}}
     },
     {
-        path: 'courses',
-        component: CourseListComponent,
-        canActivate: [AdminGuard, NgxPermissionsGuard],
-        data: { permissions: { only: ['ADMIN','TEACHER']}}
-    },
-    {
         path: 'users',
         component: UserListComponent,
         canActivate: [AdminGuard, NgxPermissionsGuard],
         data: { permissions: { only: ['ADMIN']}}
+    },
+    {
+        path: 'users/edit/:id',
+        component: UserEditComponent,
+        canActivate: [AdminGuard, NgxPermissionsGuard],
+        data: { permissions: { only: ['ADMIN']}}
+    },
+    {
+        path: 'courses',
+        component: CourseListComponent,
+        canActivate: [AdminGuard, NgxPermissionsGuard],
+        data: { permissions: { only: ['ADMIN','TEACHER']}}
     },
     {
         path: 'courses/edit/:id',
