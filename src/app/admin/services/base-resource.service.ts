@@ -21,7 +21,7 @@ export abstract class BaseResourceService<T> {
     }
 
     public getAll(pagination: Pagination): Observable<PaginationResult> {
-
+console.log(this.getHttpUrl(pagination));
         let entities$ = this
             ._http
             .get(this.getHttpUrl(pagination))

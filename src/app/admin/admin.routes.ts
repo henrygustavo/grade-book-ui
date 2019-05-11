@@ -34,25 +34,25 @@ const routes: Route[] = [
         path: 'courses',
         component: CourseListComponent,
         canActivate: [AdminGuard, NgxPermissionsGuard],
-        data: { permissions: { only: ['ADMIN','TEACHER']}}
+        data: { permissions: { only: ['ADMIN', 'TEACHER']}}
     },
     {
         path: 'courses/edit/:id',
         component: CourseEditComponent,
         canActivate: [AdminGuard, NgxPermissionsGuard],
-        data: { permissions: { only: ['ADMIN','TEACHER']}}
+        data: { permissions: { only: ['ADMIN', 'TEACHER']}}
     },
     {
         path: 'gradebooks',
         component: GradeBookListComponent,
         canActivate: [AdminGuard, NgxPermissionsGuard],
-        data: { permissions: { only: ['ADMIN','TEACHER', 'STUDENT']}}
+        data: { permissions: { only: ['ADMIN', 'TEACHER', 'STUDENT']}}
     },
     {
         path: 'gradebooks/edit/:id',
         component: GradeBookEditComponent,
         canActivate: [AdminGuard, NgxPermissionsGuard],
-        data: { permissions: { only: ['ADMIN','TEACHER', 'STUDENT']}}
+        data: { permissions: { only: ['ADMIN', 'TEACHER', 'STUDENT']}}
     },
     {
         path: '**',

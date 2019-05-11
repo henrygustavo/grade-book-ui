@@ -7,7 +7,7 @@ import { Observable } from 'rxjs/Observable';
 @Injectable()
 export class RoleService extends BaseResourceService <Role> {
     constructor(private _jwHttp: JwtHttp) {
-        super(_jwHttp, 'roles');  
+        super(_jwHttp, 'roles');
     }
 
     public getAllRoles(): Observable<Role[]> {

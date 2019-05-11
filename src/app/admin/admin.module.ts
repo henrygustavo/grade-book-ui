@@ -18,6 +18,7 @@ import { UserListComponent } from './components/user/user-list/user-list.compone
 import { UserEditComponent } from './components/user/user-edit/user-edit.component';
 import { GradeBookListComponent } from './components/grade-book/grade-book-list/grade-book-list.component';
 import { GradeBookEditComponent } from './components/grade-book/grade-book-edit/grade-book-edit.component';
+import { StudentService } from './services/student.service';
 
 
 @NgModule({
@@ -30,7 +31,7 @@ import { GradeBookEditComponent } from './components/grade-book/grade-book-edit/
   declarations: [DashBoardComponent, CourseListComponent,
                 CourseEditComponent, UserListComponent, UserEditComponent,
                 GradeBookListComponent, GradeBookEditComponent],
-  providers: [AdminGuard,CourseService, RoleService, UserService, GradeBookService]
+  providers: [AdminGuard, CourseService, RoleService, UserService, GradeBookService, StudentService]
 
 })
 export class AdminModule { }

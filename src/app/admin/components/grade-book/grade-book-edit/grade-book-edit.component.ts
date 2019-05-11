@@ -15,8 +15,14 @@ import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import { CustomValidators } from 'ng2-validation';
 import { Course } from '../../../models/course';
+import { Student } from '../../../models/student';
+import { StudentService } from '../../../services/student.service';
+import { CourseService } from '../../../services/course.service';
 
-@Component({ selector: 'app-grade-book-edit', templateUrl: './grade-book-edit.component.html', styleUrls: ['./grade-book-edit.component.css'] })
+@Component({
+  selector: 'app-grade-book-edit',
+  templateUrl: './grade-book-edit.component.html', styleUrls: ['./grade-book-edit.component.css']
+})
 export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @BlockUI() blockUI: NgBlockUI;
@@ -28,16 +34,23 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
   subscription: Subscription = new Subscription();
   mainForm: FormGroup;
   courses: Course[];
+  students: Student[];
+  selectedCourse: Course = new Course();
   constructor(private _menuService: MenuService,
     private _gradebookService: GradeBookService,
     private _messageAlertHandleService: MessageAlertHandleService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private _studentService: StudentService,
+    private _courseService: CourseService
+
+  ) { }
 
   ngOnInit() {
     this._menuService.selectMenuItem('gradebooks');
-
+    this.getStudents();
+    this.getCourses();
     this.setUpValidationMessages();
 
     this.setUpFormControls();
@@ -70,9 +83,6 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
       studentId: {
         required: 'Student is required.',
       },
-      teacherId: {
-        required: 'Teacher is required.',
-      },
       averageWorkScore: {
         required: 'Average Work Score is required.',
       },
@@ -94,15 +104,14 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
       (params): void => {
 
         const id: number = Number(params['id']);
-    
+
         this.mainForm = this.formBuilder.group({
           id: id,
-          courseId: new FormControl({ value: ''}, [Validators.required]),
-          studentId: new FormControl({ value: ''}, [Validators.required]),
-          teacherId: new FormControl({ value: ''}, [Validators.required]),
-          averageWorkScore: new FormControl({ value: ''}, [Validators.required]),
-          partialWorkScore: new FormControl({ value: ''}, [Validators.required]),
-          finalWorkScore: new FormControl({ value: ''}, [Validators.required]),
+          courseId: new FormControl('', [Validators.required]),
+          studentId: new FormControl('', [Validators.required]),
+          averageWorkScore: new FormControl('', [Validators.required]),
+          partialWorkScore: new FormControl('', [Validators.required]),
+          finalWorkScore: new FormControl('', [Validators.required]),
         });
 
         this.getModel(id);
@@ -116,7 +125,7 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
 
     if (this.mainForm.dirty && this.mainForm.valid) {
 
-      let model =  this.mainForm.value;
+      let model = this.mainForm.value;
 
       this.blockUI.start();
       let saveSubscription = this._gradebookService.save(model, Number(model.id)).subscribe(
@@ -145,15 +154,15 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
     let modelSubscription = this._gradebookService.get(id).subscribe(
       (response: GradeBook) => {
 
+        console.log(response);
         this.mainForm.patchValue(
           {
             id: response.id,
             courseId: response.courseId,
             studentId: response.studentId,
-            teacherId: response.teacherId,
             averageWorkScore: response.averageWorkScore,
             partialWorkScore: response.partialWorkScore,
-            finalWorkScore : response.finalWorkScore
+            finalWorkScore: response.finalWorkScore
           });
 
         this.blockUI.stop();
@@ -167,5 +176,44 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
 
     this.subscription.add(modelSubscription);
 
+  }
+
+  getStudents() {
+
+    let getAllSubscription = this._studentService.getAllStudents().subscribe(
+      (response: Student[]) => {
+        this.students = response;
+      },
+      (error: any) => {
+        this._messageAlertHandleService.handleError(error);
+      }
+    );
+
+    this.subscription.add(getAllSubscription);
+
+  }
+
+  getCourses() {
+
+    let getAllCourseSubscription = this._courseService.getAllCourses().subscribe(
+      (response: Course[]) => {
+        this.courses = response;
+      },
+      (error: any) => {
+        this._messageAlertHandleService.handleError(error);
+      }
+    );
+
+    this.subscription.add(getAllCourseSubscription);
+
+  }
+
+  onChangeCourse(courseId) {
+
+    if (courseId === '') { return; }
+
+    this.selectedCourse = this.courses.find(obj => {
+      return obj.id === Number.parseInt(courseId);
+    });
   }
 }

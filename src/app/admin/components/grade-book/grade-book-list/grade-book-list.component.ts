@@ -42,7 +42,7 @@ export class GradeBookListComponent implements OnInit, OnDestroy {
 
     onSort(event: any) {
 
-        const sort = event.sorts[0];;
+        const sort = event.sorts[0];
 
         this.pagination.sortBy =  sort.prop;
         this.pagination.sortDirection = sort.dir;
@@ -67,7 +67,7 @@ export class GradeBookListComponent implements OnInit, OnDestroy {
             { prop: 'courseName', name: 'Course' },
             { prop: 'teacherName', name: 'Teacher' },
             { prop: 'studentName', name: 'Student' },
-            { prop: 'averageWorkScore', name: 'A erage Work Score' },
+            { prop: 'averageWorkScore', name: 'Average Work Score' },
             { prop: 'partialWorkScore', name: 'Partial Work Score' },
             { prop: 'finalWorkScore', name: 'Final Work Score' },
             { prop: 'finalScore', name: 'Final Score' },

@@ -39,7 +39,7 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-  
+
     this._menuService.selectMenuItem('users');
     this.getRoles();
     this.setUpValidationMessages();
@@ -66,7 +66,7 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
   setUpValidationMessages(): void {
 
     this.validationMessages = {
-    
+
       roleId: {
         required: 'Role is required.'
       },
@@ -107,14 +107,14 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
         let isAddingNewUser: boolean = id !== 0;
 
         let password = new FormControl({ value: '', disabled: isAddingNewUser }, [Validators.required, Validators.minLength(8)]);
-        let confirmPassword = new FormControl({ value: '', disabled: isAddingNewUser },[Validators.required, Validators.minLength(8),
-          CustomValidators.equalTo(password)]);
+        let confirmPassword = new FormControl({ value: '', disabled: isAddingNewUser }, [Validators.required, Validators.minLength(8),
+        CustomValidators.equalTo(password)]);
 
         this.mainForm = this.formBuilder.group({
           id: id,
-          roleId: new FormControl({ value: '', disabled: isAddingNewUser}, [Validators.required]),
+          roleId: new FormControl({ value: '', disabled: isAddingNewUser }, [Validators.required]),
           fullName: new FormControl('', [Validators.required, Validators.minLength(4)]),
-          userName: new FormControl( '', [Validators.required, CustomValidators.rangeLength([8, 10])]),
+          userName: new FormControl('', [Validators.required, CustomValidators.rangeLength([8, 10])]),
           email: new FormControl('', [Validators.required, Validators.minLength(4), CustomValidators.email]),
           password: password,
           confirmPassword: confirmPassword,
@@ -131,7 +131,7 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
     if (this.mainForm.dirty && this.mainForm.valid) {
 
-      let model =  this.mainForm.value;
+      let model = this.mainForm.value;
 
       this.blockUI.start();
       let saveSubscription = this._userService.save(model, Number(model.id)).subscribe(
@@ -146,7 +146,7 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
           this.blockUI.stop();
         }
       );
- 
+
       this.subscription.add(saveSubscription);
     }
   }
@@ -169,7 +169,7 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
             email: response.email,
             password: 'xxxxxx-xxxxx',
             confirmPassword: 'xxxxxx-xxxxx',
-            disabled : response.disabled
+            disabled: response.disabled
           });
 
         this.blockUI.stop();
@@ -185,19 +185,18 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   }
 
-  getRoles(){
-
+  getRoles() {
 
     let rolesGetAllSubscription = this._roleService.getAllRoles().subscribe(
       (response: Role[]) => {
-          this.roles = response;
+        this.roles = response;
       },
       (error: any) => {
-          this._messageAlertHandleService.handleError(error);
+        this._messageAlertHandleService.handleError(error);
       }
-  );
+    );
 
-  this.subscription.add(rolesGetAllSubscription);
+    this.subscription.add(rolesGetAllSubscription);
 
   }
 }
