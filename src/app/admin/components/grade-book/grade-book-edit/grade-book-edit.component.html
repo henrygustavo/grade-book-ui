@@ -1,42 +1,44 @@
 <div id="page-wrapper" *ngIf="mainForm">
     <div class="row">
         <div class="col-lg-12">
-            <h1 class="page-header">User</h1>
+            <h1 class="page-header">Customers</h1>
         </div>
         <!-- /.col-lg-12 -->
     </div>
     <!-- /.row -->
     <form novalidate (ngSubmit)="save()" [formGroup]="mainForm">
-        <div class="row">
+       <!--  <div class="row">
             <div class="col-md-6 well col-lg-offset-3">
+                <div class="form-group">
+                    <div [ngClass]="{'has-error': displayMessage.dni }">
+                        <input class="form-control" name="dni" placeholder="DNI"
+                                formControlName="dni"  maxlength="8" />
+                        <span class="help-block" *ngIf="displayMessage.dni">
+                            {{displayMessage.dni}}
+                        </span>
+                    </div>
+                </div>    
+                <div class="form-group">
+                    <div [ngClass]="{'has-error': displayMessage.firstName }">
+                        <input class="form-control" placeholder="Fist Name" formControlName="firstName" />
+                        <span class="help-block" *ngIf="displayMessage.firstName">
+                            {{displayMessage.firstName}}
+                        </span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div [ngClass]="{'has-error': displayMessage.lastName }">
+                        <input class="form-control" placeholder="Last Name" formControlName="lastName" />
+                        <span class="help-block" *ngIf="displayMessage.lastName">
+                            {{displayMessage.lastName}}
+                        </span>
+                    </div>
+                </div>
                 <div class="form-group">
                     <div [ngClass]="{'has-error': displayMessage.userName }">
                         <input class="form-control" placeholder="User Name" formControlName="userName" />
                         <span class="help-block" *ngIf="displayMessage.userName">
                             {{displayMessage.userName}}
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div [ngClass]="{'has-error': displayMessage.fullName }">
-                        <input class="form-control" placeholder="Full Name" formControlName="fullName" />
-                        <span class="help-block" *ngIf="displayMessage.fullName">
-                            {{displayMessage.fullName}}
-                        </span>
-                    </div>
-                </div>
-                <div class="form-group">
-                    <div [ngClass]="{'has-error': displayMessage.roleId }">
-                        
-                        <select class="form-control" formControlName="roleId">
-                            <option value="">--Select Role--</option>
-                            <option *ngFor="let role of roles" value="{{role.id}}">
-                                {{role.name}}
-                            </option>
-                        </select>
-
-                        <span class="help-block" *ngIf="displayMessage.roleId">
-                            {{displayMessage.roleId}}
                         </span>
                     </div>
                 </div>
@@ -67,7 +69,7 @@
                 <div class="form-group">
                     <div class="checkbox">
                       <label>
-                        <input type="checkbox" name="disabled" formControlName="disabled">Disabled</label>
+                        <input type="checkbox" name="active" formControlName="active">Active</label>
                     </div>
                   </div>
             </div>
@@ -76,14 +78,14 @@
             <div class="col-md-6 well col-lg-offset-3">
                 <div class="form-group">
                     <div class="col-md-3">
-                        <a [routerLink]="['/users']" class="btn btn-default btn-block">Back</a>
+                        <a [routerLink]="['/customers']" class="btn btn-default btn-block">Back</a>
                     </div>
                     <div class="col-md-9">
                         <button type="submit" class="btn btn-primary btn-block" [disabled]="!mainForm.valid">Save</button>
                     </div>
                 </div>
             </div>
-        </div>
+        </div> -->
     </form>
 </div>
 <!-- /#page-wrapper -->

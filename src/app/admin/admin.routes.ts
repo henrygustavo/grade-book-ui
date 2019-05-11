@@ -8,6 +8,8 @@ import { CourseListComponent } from './components/course/course-list/course-list
 import { CourseEditComponent } from './components/course/course-edit/course-edit.component';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserEditComponent } from './components/user/user-edit/user-edit.component';
+import { GradeBookListComponent } from './components/grade-book/grade-book-list/grade-book-list.component';
+import { GradeBookEditComponent } from './components/grade-book/grade-book-edit/grade-book-edit.component';
 
 const routes: Route[] = [
     {
@@ -39,6 +41,18 @@ const routes: Route[] = [
         component: CourseEditComponent,
         canActivate: [AdminGuard, NgxPermissionsGuard],
         data: { permissions: { only: ['ADMIN','TEACHER']}}
+    },
+    {
+        path: 'gradebooks',
+        component: GradeBookListComponent,
+        canActivate: [AdminGuard, NgxPermissionsGuard],
+        data: { permissions: { only: ['ADMIN','TEACHER', 'STUDENT']}}
+    },
+    {
+        path: 'gradebooks/edit/:id',
+        component: GradeBookEditComponent,
+        canActivate: [AdminGuard, NgxPermissionsGuard],
+        data: { permissions: { only: ['ADMIN','TEACHER', 'STUDENT']}}
     },
     {
         path: '**',

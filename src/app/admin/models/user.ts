@@ -2,7 +2,7 @@ import { BaseEntity } from '../models/base-entity';
 
 export class User extends BaseEntity {
 
-    name: string;
+    fullName: string;
     userName: string;
     email: string;
     roleId: number;

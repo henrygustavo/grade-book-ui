@@ -16,6 +16,8 @@ import { CourseListComponent } from './components/course/course-list/course-list
 import { CourseEditComponent } from './components/course/course-edit/course-edit.component';
 import { UserListComponent } from './components/user/user-list/user-list.component';
 import { UserEditComponent } from './components/user/user-edit/user-edit.component';
+import { GradeBookListComponent } from './components/grade-book/grade-book-list/grade-book-list.component';
+import { GradeBookEditComponent } from './components/grade-book/grade-book-edit/grade-book-edit.component';
 
 
 @NgModule({
@@ -25,7 +27,9 @@ import { UserEditComponent } from './components/user/user-edit/user-edit.compone
     ReactiveFormsModule,
     adminRoutes
   ],
-  declarations: [DashBoardComponent, CourseListComponent, CourseEditComponent, UserListComponent, UserEditComponent],
+  declarations: [DashBoardComponent, CourseListComponent,
+                CourseEditComponent, UserListComponent, UserEditComponent,
+                GradeBookListComponent, GradeBookEditComponent],
   providers: [AdminGuard,CourseService, RoleService, UserService, GradeBookService]
 
 })

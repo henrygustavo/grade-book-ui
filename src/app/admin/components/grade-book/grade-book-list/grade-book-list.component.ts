@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild, TemplateRef, OnDestroy } from '@angular/core';
 import { MenuService } from '../../../../shared/services/menu.service';
-import { UserService } from '../../../services/user.service';
+import { GradeBookService } from '../../../services/grade-book.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Pagination } from '../../../models/pagination';
 import { PaginationResult } from '../../../models/pagination-result';
@@ -8,11 +8,11 @@ import { Subscription } from 'rxjs/Subscription';
 import { MessageAlertHandleService } from '../../../../shared/services/message-alert.service';
 
 @Component({
-    selector: 'app-user-list',
-    templateUrl: './user-list.component.html',
-    styleUrls: ['./user-list.component.css']
+    selector: 'app-grade-book-list',
+    templateUrl: './grade-book-list.component.html',
+    styleUrls: ['./grade-book-list.component.css']
 })
-export class UserListComponent implements OnInit, OnDestroy {
+export class GradeBookListComponent implements OnInit, OnDestroy {
 
     @BlockUI() blockUI: NgBlockUI;
     @ViewChild('editTmplRow') editTmplRow: TemplateRef<any>;
@@ -23,12 +23,12 @@ export class UserListComponent implements OnInit, OnDestroy {
     rows = new Array<any>();
     columns: Array<any> = [];
 
-    constructor(private _menuService: MenuService, private _userService: UserService,
+    constructor(private _menuService: MenuService, private _gradebookService: GradeBookService,
         private _messageAlertHandleService: MessageAlertHandleService) { }
 
     ngOnInit() {
 
-        this._menuService.selectMenuItem('users');
+        this._menuService.selectMenuItem('grade-books');
 
         this.setUpColumns();
         this.initializePagination();
@@ -42,7 +42,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     onSort(event: any) {
 
-        const sort = event.sorts[0];
+        const sort = event.sorts[0];;
 
         this.pagination.sortBy =  sort.prop;
         this.pagination.sortDirection = sort.dir;
@@ -54,7 +54,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
     initializePagination(): void {
 
-        this.pagination.sortBy = 'userName';
+        this.pagination.sortBy = 'id';
         this.pagination.sortDirection = 'asc';
         this.pagination.currentPage = 1;
         this.pagination.pageSize = 10;
@@ -64,11 +64,13 @@ export class UserListComponent implements OnInit, OnDestroy {
     setUpColumns(): void {
 
         this.columns = [
-            { prop: 'userName', name: 'User Name' },
-            { prop: 'fullName', name: 'Full Name' },
-            { prop: 'roleName', name: 'Role Name', sortable: false },
-            { prop: 'email', name: 'Email' },
-            { prop: 'disabled', name: 'Disabled' },
+            { prop: 'courseName', name: 'Course' },
+            { prop: 'teacherName', name: 'Teacher' },
+            { prop: 'studentName', name: 'Student' },
+            { prop: 'averageWorkScore', name: 'A erage Work Score' },
+            { prop: 'partialWorkScore', name: 'Partial Work Score' },
+            { prop: 'finalWorkScore', name: 'Final Work Score' },
+            { prop: 'finalScore', name: 'Final Score' },
             { prop: '', name: '', cellTemplate: this.editTmplRow }];
     }
 
@@ -76,7 +78,7 @@ export class UserListComponent implements OnInit, OnDestroy {
 
         this.blockUI.start();
 
-        let userGetAllSubscription = this._userService.getAll(this.pagination).subscribe(
+        let getAllSubscription = this._gradebookService.getAll(this.pagination).subscribe(
             (response: PaginationResult) => {
 
                 this.pagination.totalRecords = response.totalRecords;
@@ -93,7 +95,7 @@ export class UserListComponent implements OnInit, OnDestroy {
             }
         );
 
-        this.subscription.add(userGetAllSubscription);
+        this.subscription.add(getAllSubscription);
     }
 
     setUpPage(pageInfo: any) {

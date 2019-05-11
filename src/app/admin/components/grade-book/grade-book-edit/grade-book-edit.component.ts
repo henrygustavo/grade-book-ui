@@ -1,10 +1,10 @@
 import { Component, OnInit, ViewChildren, ElementRef, AfterViewInit, OnDestroy } from '@angular/core';
 import { MenuService } from '../../../../shared/services/menu.service';
-import { UserService } from '../../../services/user.service';
+import { GradeBookService } from '../../../services/grade-book.service';
 import { BlockUI, NgBlockUI } from 'ng-block-ui';
 import { Subscription } from 'rxjs/Subscription';
 import { FormGroup, FormControlName, FormBuilder, FormControl, Validators } from '@angular/forms';
-import { User } from '../../../models/user';
+import { GradeBook } from '../../../models/grade-book';
 import { GenericValidator } from '../../../../shared/validators/generic-validator';
 import { Router, ActivatedRoute } from '@angular/router';
 import { MessageAlertHandleService } from '../../../../shared/services/message-alert.service';
@@ -14,11 +14,10 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import { CustomValidators } from 'ng2-validation';
-import { RoleService } from '../../../services/role.service';
-import { Role } from '../../../models/role';
+import { Course } from '../../../models/course';
 
-@Component({ selector: 'app-user-edit', templateUrl: './user-edit.component.html', styleUrls: ['./user-edit.component.css'] })
-export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
+@Component({ selector: 'app-grade-book-edit', templateUrl: './grade-book-edit.component.html', styleUrls: ['./grade-book-edit.component.css'] })
+export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
   @BlockUI() blockUI: NgBlockUI;
   @ViewChildren(FormControlName, { read: ElementRef })
@@ -28,21 +27,19 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
   genericValidator: GenericValidator;
   subscription: Subscription = new Subscription();
   mainForm: FormGroup;
-  roles: Role[];
-
+  courses: Course[];
   constructor(private _menuService: MenuService,
-    private _roleService: RoleService,
-    private _userService: UserService,
+    private _gradebookService: GradeBookService,
     private _messageAlertHandleService: MessageAlertHandleService,
     private _route: ActivatedRoute,
     private _router: Router,
     private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-  
-    this._menuService.selectMenuItem('users');
-    this.getRoles();
+    this._menuService.selectMenuItem('gradebooks');
+
     this.setUpValidationMessages();
+
     this.setUpFormControls();
   }
 
@@ -66,31 +63,24 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
   setUpValidationMessages(): void {
 
     this.validationMessages = {
-    
-      roleId: {
-        required: 'Role is required.'
+
+      courseId: {
+        required: 'Course is required.',
       },
-      fullName: {
-        required: 'Full Name is required.',
-        minlength: 'Full Name must have at least 4 characters.',
+      studentId: {
+        required: 'Student is required.',
       },
-      userName: {
-        required: 'User Name is required.',
-        rangeLength: 'User Name must have 8-10 characters.',
+      teacherId: {
+        required: 'Teacher is required.',
       },
-      email: {
-        required: 'Email is required.',
-        minlength: 'Email must have at least 4 characters.',
-        email: 'Please enter a valid email address.'
+      averageWorkScore: {
+        required: 'Average Work Score is required.',
       },
-      password: {
-        required: 'Password is required.',
-        minlength: 'Password must be at least 8 characters.'
+      partialWorkScore: {
+        required: 'Partial Work Score is required.',
       },
-      confirmPassword: {
-        required: 'Password is required.',
-        minlength: 'Password must be at least 8 characters.',
-        equalTo: 'ConfirmPassword does not match with Password'
+      finalWorkScore: {
+        required: 'Final Work Score is required.',
       }
     };
 
@@ -104,27 +94,22 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
       (params): void => {
 
         const id: number = Number(params['id']);
-        let isAddingNewUser: boolean = id !== 0;
-
-        let password = new FormControl({ value: '', disabled: isAddingNewUser }, [Validators.required, Validators.minLength(8)]);
-        let confirmPassword = new FormControl({ value: '', disabled: isAddingNewUser },[Validators.required, Validators.minLength(8),
-          CustomValidators.equalTo(password)]);
-
+    
         this.mainForm = this.formBuilder.group({
           id: id,
-          roleId: new FormControl({ value: '', disabled: isAddingNewUser}, [Validators.required]),
-          fullName: new FormControl('', [Validators.required, Validators.minLength(4)]),
-          userName: new FormControl( '', [Validators.required, CustomValidators.rangeLength([8, 10])]),
-          email: new FormControl('', [Validators.required, Validators.minLength(4), CustomValidators.email]),
-          password: password,
-          confirmPassword: confirmPassword,
-          disabled: new FormControl(false)
+          courseId: new FormControl({ value: ''}, [Validators.required]),
+          studentId: new FormControl({ value: ''}, [Validators.required]),
+          teacherId: new FormControl({ value: ''}, [Validators.required]),
+          averageWorkScore: new FormControl({ value: ''}, [Validators.required]),
+          partialWorkScore: new FormControl({ value: ''}, [Validators.required]),
+          finalWorkScore: new FormControl({ value: ''}, [Validators.required]),
         });
 
         this.getModel(id);
       });
 
     this.subscription.add(formSubscription);
+
   }
 
   save(): void {
@@ -134,19 +119,19 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
       let model =  this.mainForm.value;
 
       this.blockUI.start();
-      let saveSubscription = this._userService.save(model, Number(model.id)).subscribe(
+      let saveSubscription = this._gradebookService.save(model, Number(model.id)).subscribe(
         () => {
           this._messageAlertHandleService.handleSuccess('Saved successfully');
           this.mainForm.reset();
           this.blockUI.stop();
-          this._router.navigate(['/users']);
+          this._router.navigate(['/gradebooks']);
         },
         error => {
           this._messageAlertHandleService.handleError(error);
           this.blockUI.stop();
         }
       );
- 
+
       this.subscription.add(saveSubscription);
     }
   }
@@ -157,19 +142,18 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
 
     this.blockUI.start();
 
-    let modelSubscription = this._userService.get(id).subscribe(
-      (response: User) => {
+    let modelSubscription = this._gradebookService.get(id).subscribe(
+      (response: GradeBook) => {
 
         this.mainForm.patchValue(
           {
             id: response.id,
-            roleId: response.roleId,
-            fullName: response.fullName,
-            userName: response.userName,
-            email: response.email,
-            password: 'xxxxxx-xxxxx',
-            confirmPassword: 'xxxxxx-xxxxx',
-            disabled : response.disabled
+            courseId: response.courseId,
+            studentId: response.studentId,
+            teacherId: response.teacherId,
+            averageWorkScore: response.averageWorkScore,
+            partialWorkScore: response.partialWorkScore,
+            finalWorkScore : response.finalWorkScore
           });
 
         this.blockUI.stop();
@@ -182,22 +166,6 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
     );
 
     this.subscription.add(modelSubscription);
-
-  }
-
-  getRoles(){
-
-
-    let rolesGetAllSubscription = this._roleService.getAllRoles().subscribe(
-      (response: Role[]) => {
-          this.roles = response;
-      },
-      (error: any) => {
-          this._messageAlertHandleService.handleError(error);
-      }
-  );
-
-  this.subscription.add(rolesGetAllSubscription);
 
   }
 }
