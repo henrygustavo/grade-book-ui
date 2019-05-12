@@ -6,6 +6,8 @@ import { Pagination } from '../../../models/pagination';
 import { PaginationResult } from '../../../models/pagination-result';
 import { Subscription } from 'rxjs/Subscription';
 import { MessageAlertHandleService } from '../../../../shared/services/message-alert.service';
+import { AuthService } from 'ng2-ui-auth';
+import { Roles } from '../../enums/roles.enum';
 
 @Component({
     selector: 'app-course-list',
@@ -24,6 +26,7 @@ export class CourseListComponent implements OnInit, OnDestroy {
     columns: Array<any> = [];
 
     constructor(private _menuService: MenuService, private _courseService: CourseService,
+        private _authService: AuthService,
         private _messageAlertHandleService: MessageAlertHandleService) { }
 
     ngOnInit() {
@@ -101,5 +104,15 @@ export class CourseListComponent implements OnInit, OnDestroy {
         this.pagination.currentPage = pageInfo.offset + 1;
 
         this.loadData();
+    }
+
+        
+    isAdmin(): boolean {
+
+        let role = this._authService.isAuthenticated() &&
+      this._authService.getPayload() !== undefined
+      ? this._authService.getPayload().role.toLowerCase() : '';
+
+      return role == Roles.Admin;
     }
 }

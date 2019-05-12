@@ -4,6 +4,7 @@ import { AuthService } from 'ng2-ui-auth';
 import { Router, NavigationStart } from '@angular/router';
 import { filter } from 'rxjs/operators';
 import { NgxRolesService } from 'ngx-permissions';
+import { Roles } from './admin/components/enums/roles.enum';
 
 @Component({
   selector: 'app-root',
@@ -43,15 +44,15 @@ export class AppComponent implements OnInit {
     this._ngxRolesService.addRoles({
       'ADMIN': () => {
         return this._authService.isAuthenticated() &&
-          role === 'admin';
+          role === Roles.Admin;
       },
       'TEACHER': () => {
         return this._authService.isAuthenticated() &&
-          role === 'teacher';
+          role === Roles.Teacher;
       },
       'STUDENT': () => {
         return this._authService.isAuthenticated() &&
-          role === 'student';
+          role ===  Roles.Student;
       },
       'GUEST': () => {
         return !this._authService.isAuthenticated();

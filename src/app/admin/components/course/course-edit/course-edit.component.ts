@@ -14,6 +14,8 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
 import { CustomValidators } from 'ng2-validation';
+import { Roles } from '../../enums/roles.enum';
+import { AuthService } from 'ng2-ui-auth';
 
 @Component({ selector: 'app-course-edit', templateUrl: './course-edit.component.html', styleUrls: ['./course-edit.component.css'] })
 export class CourseEditComponent implements OnInit, AfterViewInit, OnDestroy {
@@ -32,7 +34,8 @@ export class CourseEditComponent implements OnInit, AfterViewInit, OnDestroy {
     private _messageAlertHandleService: MessageAlertHandleService,
     private _route: ActivatedRoute,
     private _router: Router,
-    private formBuilder: FormBuilder) { }
+    private formBuilder: FormBuilder,
+    private _authService: AuthService) { }
 
   ngOnInit() {
     this._menuService.selectMenuItem('courses');
@@ -73,16 +76,16 @@ export class CourseEditComponent implements OnInit, AfterViewInit, OnDestroy {
       },
       averageWorkPercentage: {
         required: 'Average Work % is required.',
-        digits: 'Please enter a valid number.'
+        number: 'Please enter a valid number.'
 
       },
       partialWorkPercentage: {
         required: 'Partial Work % is required.',
-        digits: 'Please enter a valid number.'
+        number: 'Please enter a valid number.'
       },
       finalWorkPercentage: {
         required: 'Final Work % is required.',
-        digits: 'Please enter a valid number.'
+        number: 'Please enter a valid number.'
       }
     };
 
@@ -96,14 +99,13 @@ export class CourseEditComponent implements OnInit, AfterViewInit, OnDestroy {
       (params): void => {
 
         const id: number = Number(params['id']);
-        
         this.mainForm = this.formBuilder.group({
           id: id,
           code: new FormControl('', [Validators.required, Validators.minLength(5)]),
           name: new FormControl('', [Validators.required, Validators.minLength(5)]),
-          averageWorkPercentage: new FormControl('', [Validators.required, CustomValidators.digits]),
-          partialWorkPercentage: new FormControl('', [Validators.required, CustomValidators.digits]),
-          finalWorkPercentage: new FormControl('', [Validators.required, CustomValidators.digits])
+          averageWorkPercentage: new FormControl('', [Validators.required, CustomValidators.number]),
+          partialWorkPercentage: new FormControl('', [Validators.required, CustomValidators.number]),
+          finalWorkPercentage: new FormControl('', [Validators.required, CustomValidators.number])
         });
 
         this.getModel(id);
@@ -167,4 +169,14 @@ export class CourseEditComponent implements OnInit, AfterViewInit, OnDestroy {
     this.subscription.add(modelSubscription);
 
   }
+
+  isTeacher(): boolean {
+
+    let role = this._authService.isAuthenticated() &&
+  this._authService.getPayload() !== undefined
+  ? this._authService.getPayload().role.toLowerCase() : '';
+
+  return role== Roles.Teacher;
+}
+
 }

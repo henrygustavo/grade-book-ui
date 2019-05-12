@@ -5,7 +5,7 @@
     </div>
   </div>
   <div class="row">
-    <div class="col-lg-12">
+    <div class="col-lg-12" *ngIf="isAdmin()">
       <a [routerLink]="['/','courses','edit','0']" style="float: right" class="btn btn-success">
         <i class="glyphicon glyphicon-plus"></i>Add</a>
     </div>

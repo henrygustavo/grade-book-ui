@@ -1,14 +1,15 @@
 <div id="page-wrapper">
   <div class="row">
     <div class="col-lg-12">
-      <h1 class="page-header test">GradeBooks</h1>
+      <h1 class="page-header test">Grade Books</h1>
     </div>
   </div>
-  <div class="row">
+  <div class="row" *ngIf="isTeacher()">
     <div class="col-lg-12">
       <a [routerLink]="['/','gradebooks','edit','0']" style="float: right" class="btn btn-success">
         <i class="glyphicon glyphicon-plus"></i>Add</a>
     </div>
+    
   </div>
   <div class="row">
     <div class="col-md-12">
@@ -22,7 +23,10 @@
 <!-- /#page-wrapper -->
 
 <ng-template #editTmplRow let-row="row" ngx-datatable-cell-template>
-  <a [routerLink]="['/','gradebooks','edit', row.id]">
+  <a [routerLink]="['/','gradebooks','edit', row.id]" *ngIf="isTeacher()">
     <i class="btn fa fa-edit"></i>
+  </a>
+  <a (click)= deleteGradeBook(row.id) *ngIf="isTeacher()">
+    <i class="btn fa fa-trash"></i>
   </a>
 </ng-template>

@@ -28,7 +28,7 @@ export class UserEditComponent implements OnInit, AfterViewInit, OnDestroy {
   genericValidator: GenericValidator;
   subscription: Subscription = new Subscription();
   mainForm: FormGroup;
-  roles: Role[];
+  roles: Role[] = [];
 
   constructor(private _menuService: MenuService,
     private _roleService: RoleService,

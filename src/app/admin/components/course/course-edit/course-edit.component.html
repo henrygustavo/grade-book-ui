@@ -11,7 +11,7 @@
             <div class="col-md-6 well col-lg-offset-3">
                 <div class="form-group">
                     <div [ngClass]="{'has-error': displayMessage.code }">
-                        <input class="form-control" placeholder="Code" formControlName="code" />
+                        <input class="form-control" placeholder="Code" formControlName="code" [readonly] ="isTeacher()" />
                         <span class="help-block" *ngIf="displayMessage.code">
                             {{displayMessage.code}}
                         </span>
@@ -19,7 +19,7 @@
                 </div>
                 <div class="form-group">
                     <div [ngClass]="{'has-error': displayMessage.name }">
-                        <input class="form-control" placeholder="Name" formControlName="name" />
+                        <input class="form-control" placeholder="Name" formControlName="name" [readonly] ="isTeacher()" />
                         <span class="help-block" *ngIf="displayMessage.name">
                             {{displayMessage.name}}
                         </span>

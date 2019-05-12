@@ -13,11 +13,11 @@ import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/operator/debounceTime';
 import 'rxjs/add/observable/fromEvent';
 import 'rxjs/add/observable/merge';
-import { CustomValidators } from 'ng2-validation';
 import { Course } from '../../../models/course';
 import { Student } from '../../../models/student';
 import { StudentService } from '../../../services/student.service';
 import { CourseService } from '../../../services/course.service';
+import { CustomValidators } from 'ng2-validation';
 
 @Component({
   selector: 'app-grade-book-edit',
@@ -33,8 +33,8 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
   genericValidator: GenericValidator;
   subscription: Subscription = new Subscription();
   mainForm: FormGroup;
-  courses: Course[];
-  students: Student[];
+  courses: Course[]  = [];
+  students: Student[] = [];
   selectedCourse: Course = new Course();
   constructor(private _menuService: MenuService,
     private _gradebookService: GradeBookService,
@@ -49,8 +49,8 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
 
   ngOnInit() {
     this._menuService.selectMenuItem('gradebooks');
-    this.getStudents();
     this.getCourses();
+    this.getStudents();
     this.setUpValidationMessages();
 
     this.setUpFormControls();
@@ -85,12 +85,18 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
       },
       averageWorkScore: {
         required: 'Average Work Score is required.',
+        number: 'Average Work Score should be a number',
+        range:'Average Work Score should be between 0-20'
       },
       partialWorkScore: {
         required: 'Partial Work Score is required.',
+        number: 'Partial Work Score should be a number',
+        range:'Partial Work Score should be between 0-20'
       },
       finalWorkScore: {
         required: 'Final Work Score is required.',
+        number: 'Final Work Score should be a number',
+        range:'Final Work Score should be between 0-20'
       }
     };
 
@@ -109,9 +115,9 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
           id: id,
           courseId: new FormControl('', [Validators.required]),
           studentId: new FormControl('', [Validators.required]),
-          averageWorkScore: new FormControl('', [Validators.required]),
-          partialWorkScore: new FormControl('', [Validators.required]),
-          finalWorkScore: new FormControl('', [Validators.required]),
+          averageWorkScore: new FormControl('', [Validators.required, CustomValidators.number, CustomValidators.range([0, 20])]),
+          partialWorkScore: new FormControl('', [Validators.required, CustomValidators.number, CustomValidators.range([0, 20])]),
+          finalWorkScore: new FormControl('', [Validators.required, CustomValidators.number, CustomValidators.range([0, 20])])
         });
 
         this.getModel(id);
@@ -154,7 +160,6 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
     let modelSubscription = this._gradebookService.get(id).subscribe(
       (response: GradeBook) => {
 
-        console.log(response);
         this.mainForm.patchValue(
           {
             id: response.id,
@@ -164,7 +169,8 @@ export class GradeBookEditComponent implements OnInit, AfterViewInit, OnDestroy 
             partialWorkScore: response.partialWorkScore,
             finalWorkScore: response.finalWorkScore
           });
-
+          
+        this.onChangeCourse(response.courseId);
         this.blockUI.stop();
       },
       (error: any) => {

@@ -21,7 +21,6 @@ export abstract class BaseResourceService<T> {
     }
 
     public getAll(pagination: Pagination): Observable<PaginationResult> {
-console.log(this.getHttpUrl(pagination));
         let entities$ = this
             ._http
             .get(this.getHttpUrl(pagination))
@@ -34,6 +33,15 @@ console.log(this.getHttpUrl(pagination));
 
         let entity$ = this._http
             .get(`${this.baseUrl}/${id}`)
+            .map((response: Response) => response.json())
+            .catch((error: any) => Observable.throw(error || 'Server error'));
+        return entity$;
+    }
+
+    public delete(id: number): Observable<T> {
+
+        let entity$ = this._http
+            .delete(`${this.baseUrl}/${id}`)
             .map((response: Response) => response.json())
             .catch((error: any) => Observable.throw(error || 'Server error'));
         return entity$;

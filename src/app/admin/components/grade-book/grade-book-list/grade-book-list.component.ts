@@ -6,6 +6,8 @@ import { Pagination } from '../../../models/pagination';
 import { PaginationResult } from '../../../models/pagination-result';
 import { Subscription } from 'rxjs/Subscription';
 import { MessageAlertHandleService } from '../../../../shared/services/message-alert.service';
+import { AuthService } from 'ng2-ui-auth';
+import { Roles } from '../../enums/roles.enum';
 
 @Component({
     selector: 'app-grade-book-list',
@@ -23,7 +25,7 @@ export class GradeBookListComponent implements OnInit, OnDestroy {
     rows = new Array<any>();
     columns: Array<any> = [];
 
-    constructor(private _menuService: MenuService, private _gradebookService: GradeBookService,
+    constructor(private _menuService: MenuService, private _gradebookService: GradeBookService, private _authService: AuthService,
         private _messageAlertHandleService: MessageAlertHandleService) { }
 
     ngOnInit() {
@@ -103,5 +105,35 @@ export class GradeBookListComponent implements OnInit, OnDestroy {
         this.pagination.currentPage = pageInfo.offset + 1;
 
         this.loadData();
+    }
+
+    
+    isTeacher(): boolean {
+
+        let role = this._authService.isAuthenticated() &&
+      this._authService.getPayload() !== undefined
+      ? this._authService.getPayload().role.toLowerCase() : '';
+
+      return role== Roles.Teacher;
+    }
+
+    deleteGradeBook(gradeBookId: number){
+        this.blockUI.start();
+
+        let deleteSubscription = this._gradebookService.delete(gradeBookId).subscribe(
+            (response: any) => {
+
+                this._messageAlertHandleService.handleSuccess(response);
+                this.loadData();
+                this.blockUI.stop();
+            },
+            (error: any) => {
+                this._messageAlertHandleService.handleError(error);
+
+                this.blockUI.stop();
+            }
+        );
+
+        this.subscription.add(deleteSubscription);
     }
 }
