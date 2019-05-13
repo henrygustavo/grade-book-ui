@@ -1,0 +1,18 @@
+version: '3.5'
+services:
+  grade-book-ui:
+    image: henrygustavo/grade-book-ui
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: grade-book-ui
+    networks:
+      - grade-book-ui
+    ports:
+      - '7000:4200'
+    environment:
+     - HOST=0.0.0.0
+    command: npm run start
+networks:
+  grade-book-ui:
+    driver: bridge
